@@ -33,9 +33,3 @@
    make logs   # View logs
    make down   # Stop
 ```
-
-## Commands
-
-- `make help` - See all available commands
-- `make format` - Format all code
-- `make lint` - Lint all code
