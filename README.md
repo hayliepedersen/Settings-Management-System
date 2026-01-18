@@ -1,41 +1,27 @@
 # Settings Management System
 
-## Setup
+## Starting the app
 
-1. **Clone the repo:**
+1. **Clone this repo:**
 
 ```bash
-   git clone <repo-url>
+   git clone https://github.com/hayliepedersen/Settings-Management-System.git
+```
+```bash
    cd Settings-Management-System
 ```
 
-2. **Install dependencies:**
-
+2. **Start Docker containers:**
 ```bash
-   make install
+   make up
 ```
 
-3. **Open in VSCode:**
-   - VSCode should automatically detect the Python interpreter at `backend/venv/bin/python`
-   - If not, click the Python version in bottom-right corner and select `./backend/venv/bin/python`
+3. **Access the app:**
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:8000
+   - API Docs: http://localhost:8000/docs
 
-4. **Run locally:**
-
+4. **Stop containers:**
 ```bash
-   make dev-frontend  # Frontend on :5173
-   make dev-backend   # Backend on :8000
+   make down
 ```
-
-5. **Or run with Docker:**
-
-```bash
-   make up     # Runs on :3000 (frontend) and :8000 (backend)
-   make logs   # View logs
-   make down   # Stop
-```
-
-## Commands
-
-- `make help` - See all available commands
-- `make format` - Format all code
-- `make lint` - Lint all code
