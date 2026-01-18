@@ -1,6 +1,6 @@
 from sqlalchemy import Column, String, Integer
 from sqlalchemy.dialects.postgresql import JSONB
-from ..app.database import Base
+from ..database import Base
 import uuid
 
 class Settings(Base):
