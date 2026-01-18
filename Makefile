@@ -30,6 +30,17 @@ up:
 down:
 	docker-compose down
 
+dev-db:
+	docker run --name settings-db -d \
+		-e POSTGRES_USER=postgres \
+		-e POSTGRES_PASSWORD=postgres \
+		-e POSTGRES_DB=settings_db \
+		-p 5432:5432 \
+		postgres:15-alpine
+
+stop-db:
+	docker stop settings-db && docker rm settings-db || true
+
 restart:
 	docker-compose down
 	docker-compose up -d --build
