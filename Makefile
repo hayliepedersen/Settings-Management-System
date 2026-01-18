@@ -1,5 +1,5 @@
 .PHONY: help install up down restart logs logs-frontend logs-backend clean status
-.PHONY: dev-frontend dev-backend format format-check lint lint-fix type-check
+.PHONY: dev-frontend dev-backend format format-check lint lint-fix type-check dev-db stop-db
 
 help:
 	@echo "Available commands:"
@@ -11,6 +11,7 @@ help:
 	@echo ""
 	@echo "  make dev-frontend    - Run frontend dev server"
 	@echo "  make dev-backend     - Run backend dev server"
+	@echo "  make dev-db          - Start postgres for local dev"
 	@echo ""
 	@echo "  make format          - Format all code"
 	@echo "  make lint            - Lint all code"
@@ -25,10 +26,35 @@ install:
 	@echo "Done!"
 
 up:
-	docker-compose up -d --build
+	docker compose up -d --build
 
 down:
-	docker-compose down
+	docker compose down
+
+restart:
+	docker compose down
+	docker compose up -d --build
+
+logs:
+	docker compose logs -f
+
+logs-frontend:
+	docker compose logs -f frontend
+
+logs-backend:
+	docker compose logs -f backend
+
+clean:
+	docker compose down -v
+
+status:
+	docker compose ps
+
+dev-frontend:
+	cd frontend && npm run dev
+
+dev-backend:
+	cd backend && ./venv/bin/uvicorn app.main:app --reload
 
 dev-db:
 	docker run --name settings-db -d \
@@ -40,31 +66,6 @@ dev-db:
 
 stop-db:
 	docker stop settings-db && docker rm settings-db || true
-
-restart:
-	docker-compose down
-	docker-compose up -d --build
-
-logs:
-	docker-compose logs -f
-
-logs-frontend:
-	docker-compose logs -f frontend
-
-logs-backend:
-	docker-compose logs -f backend
-
-clean:
-	docker-compose down -v
-
-status:
-	docker-compose ps
-
-dev-frontend:
-	cd frontend && npm run dev
-
-dev-backend:
-	cd backend && ./venv/bin/uvicorn app.main:app --reload
 
 format:
 	@echo "Formatting frontend..."
