@@ -79,9 +79,6 @@ export default function SettingsManagement() {
             <h1 className="text-3xl font-bold text-foreground">
               Settings Management
             </h1>
-            <p className="text-muted-foreground mt-1">
-              Manage your schemaless JSON settings
-            </p>
           </div>
           <Button
             onClick={() => setShowCreateForm(!showCreateForm)}
