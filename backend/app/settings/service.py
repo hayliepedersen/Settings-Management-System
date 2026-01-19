@@ -13,16 +13,18 @@ class SettingsService:
         db_settings = await self.repository.create(settings.data)
         return SettingsResponse(id=db_settings.id, data=db_settings.data)
 
-    async def get_all_settings(self, page: int = 1, page_size: int = 10) -> SettingsList:
+    async def get_all_settings(
+        self, page: int = 1, page_size: int = 10
+    ) -> SettingsList:
         """Get paginated list of all settings"""
         skip = (page - 1) * page_size
         items, total = await self.repository.list_all(skip=skip, limit=page_size)
-        
+
         return SettingsList(
             items=[SettingsResponse(id=s.id, data=s.data) for s in items],
             total=total,
             page=page,
-            page_size=page_size
+            page_size=page_size,
         )
 
     async def get_settings_by_id(self, uid: str) -> Optional[SettingsResponse]:
@@ -32,7 +34,9 @@ class SettingsService:
             return None
         return SettingsResponse(id=settings.id, data=settings.data)
 
-    async def update_settings(self, uid: str, settings: SettingsUpdate) -> Optional[SettingsResponse]:
+    async def update_settings(
+        self, uid: str, settings: SettingsUpdate
+    ) -> Optional[SettingsResponse]:
         """Update settings by ID"""
         updated = await self.repository.update(uid, settings.data)
         if not updated:

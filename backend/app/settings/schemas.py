@@ -13,7 +13,7 @@ class SettingsUpdate(BaseModel):
 class SettingsResponse(BaseModel):
     id: str
     data: Dict[str, Any]
-    
+
     class Config:
         from_attributes = True
 

@@ -1,5 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { getSettings, getSetting, createSetting, updateSetting, deleteSetting } from "./settings.api"
+import {
+  getSettings,
+  getSetting,
+  createSetting,
+  updateSetting,
+  deleteSetting,
+} from './settings.api'
 
 interface UseSettingsParams {
   page: number
@@ -14,7 +20,7 @@ interface UseSettingsParams {
 export const useSettings = ({ page, pageSize }: UseSettingsParams) => {
   return useQuery({
     queryKey: ['settings', page, pageSize],
-    queryFn: () => getSettings(page, pageSize)
+    queryFn: () => getSettings(page, pageSize),
   })
 }
 
@@ -27,7 +33,7 @@ export const useSetting = (id: string) => {
   return useQuery({
     queryKey: ['settings', id],
     queryFn: () => getSetting(id),
-    enabled: !!id
+    enabled: !!id,
   })
 }
 
@@ -37,12 +43,12 @@ export const useSetting = (id: string) => {
  */
 export const useCreateSetting = () => {
   const queryClient = useQueryClient()
-  
+
   return useMutation({
     mutationFn: (data: Record<string, any>) => createSetting(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['settings'] })
-    }
+    },
   })
 }
 
@@ -52,13 +58,13 @@ export const useCreateSetting = () => {
  */
 export const useUpdateSetting = () => {
   const queryClient = useQueryClient()
-  
+
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Record<string, any> }) => 
+    mutationFn: ({ id, data }: { id: string; data: Record<string, any> }) =>
       updateSetting(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['settings'] })
-    }
+    },
   })
 }
 
@@ -68,11 +74,11 @@ export const useUpdateSetting = () => {
  */
 export const useDeleteSetting = () => {
   const queryClient = useQueryClient()
-  
+
   return useMutation({
     mutationFn: (id: string) => deleteSetting(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['settings'] })
-    }
+    },
   })
 }

@@ -7,7 +7,9 @@ from .service import SettingsService
 def settings_router() -> APIRouter:
     router = APIRouter(prefix="/settings", tags=["Settings"])
 
-    @router.post("", response_model=SettingsResponse, status_code=status.HTTP_201_CREATED)
+    @router.post(
+        "", response_model=SettingsResponse, status_code=status.HTTP_201_CREATED
+    )
     async def create_settings(
         settings: SettingsCreate,
         settings_service: SettingsService = Depends(get_settings_service),
