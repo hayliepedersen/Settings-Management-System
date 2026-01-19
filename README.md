@@ -1,5 +1,5 @@
 # Settings Management System
-
+Hi! Welcome to my settings management system application :)
 ## Starting the app
 
 1. **Clone this repo:**
