@@ -5,7 +5,7 @@ import {
   createSetting,
   updateSetting,
   deleteSetting,
-} from './settings/settings.api'
+} from './settings.api'
 
 interface UseSettingsParams {
   page: number
