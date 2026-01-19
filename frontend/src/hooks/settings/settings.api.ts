@@ -1,5 +1,5 @@
-import api from './api'
-import type { SettingsList, SettingsResponse } from '../types/settings'
+import api from '../api'
+import type { SettingsList, SettingsResponse } from '../../types/settings'
 
 /**
  * Fetches paginated list of all settings

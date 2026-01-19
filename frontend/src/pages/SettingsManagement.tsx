@@ -5,7 +5,7 @@ import {
   useCreateSetting,
   useUpdateSetting,
   useDeleteSetting,
-} from '../hooks/settings.hooks'
+} from '../hooks/settings/settings.hooks'
 import { Button } from '../components/ui/button'
 import {
   Card,
