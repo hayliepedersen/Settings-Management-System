@@ -1,5 +1,13 @@
 import { useState } from 'react'
-import { Trash2, Edit2, Plus, X, Check } from 'lucide-react'
+import {
+  Trash2,
+  Edit2,
+  Plus,
+  X,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react'
 import {
   useSettings,
   useCreateSetting,
@@ -19,7 +27,10 @@ import { Alert, AlertDescription } from '../components/ui/alert'
 import { Badge } from '../components/ui/badge'
 
 export default function SettingsManagement() {
-  const { isLoading, data } = useSettings({ page: 1, pageSize: 100 })
+  const [page, setPage] = useState(1)
+  const [pageSize] = useState(10)
+
+  const { isLoading, data } = useSettings({ page, pageSize })
   const createMutation = useCreateSetting()
   const updateMutation = useUpdateSetting()
   const deleteMutation = useDeleteSetting()
@@ -59,6 +70,9 @@ export default function SettingsManagement() {
     try {
       await deleteMutation.mutateAsync(id)
       setError(null)
+      if (settings.length === 1 && page > 1) {
+        setPage((p) => p - 1)
+      }
     } catch (err) {
       setError('Failed to delete: ' + (err as Error).message)
     }
@@ -70,6 +84,36 @@ export default function SettingsManagement() {
   }
 
   const settings = data?.items || []
+  const totalPages = data ? Math.ceil(data.total / pageSize) : 0
+
+  const PaginationControls = () => (
+    <div className="flex items-center justify-between">
+      <p className="text-sm text-muted-foreground">
+        Showing {(page - 1) * pageSize + 1}-
+        {Math.min(page * pageSize, data?.total || 0)} of {data?.total} settings
+      </p>
+      <div className="flex gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
+          disabled={page === 1}
+        >
+          <ChevronLeft className="h-4 w-4" />
+          Previous
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+          disabled={page === totalPages}
+        >
+          Next
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
+  )
 
   return (
     <div className="min-h-screen bg-background p-8">
@@ -154,76 +198,108 @@ export default function SettingsManagement() {
             </CardContent>
           </Card>
         ) : (
-          <div className="space-y-4">
-            {settings.map((setting: any) => (
-              <Card key={setting.id}>
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="font-mono text-xs">
-                        {setting.id}
-                      </Badge>
+          <>
+            {data && data.total > 0 && (
+              <p className="text-sm text-muted-foreground mb-4">
+                {(page - 1) * pageSize + 1}-
+                {Math.min(page * pageSize, data.total)} of {data.total} settings
+              </p>
+            )}
+
+            <div className="space-y-4">
+              {settings.map((setting: any) => (
+                <Card key={setting.id}>
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="font-mono text-xs">
+                          {setting.id}
+                        </Badge>
+                      </div>
+                      <div className="flex gap-1">
+                        {editingId === setting.id ? (
+                          <>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              onClick={() => handleUpdate(setting.id)}
+                              disabled={updateMutation.isPending}
+                              className="text-green-600 hover:text-green-800 hover:bg-green-50"
+                            >
+                              <Check className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              onClick={() => setEditingId(null)}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </>
+                        ) : (
+                          <>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              onClick={() => startEdit(setting)}
+                              className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                            >
+                              <Edit2 className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              onClick={() => handleDelete(setting.id)}
+                              disabled={deleteMutation.isPending}
+                              className="text-red-600 hover:text-red-800 hover:bg-red-50"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex gap-1">
-                      {editingId === setting.id ? (
-                        <>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            onClick={() => handleUpdate(setting.id)}
-                            disabled={updateMutation.isPending}
-                            className="text-green-600 hover:text-green-800 hover:bg-green-50"
-                          >
-                            <Check className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            onClick={() => setEditingId(null)}
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </>
-                      ) : (
-                        <>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            onClick={() => startEdit(setting)}
-                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
-                          >
-                            <Edit2 className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            onClick={() => handleDelete(setting.id)}
-                            disabled={deleteMutation.isPending}
-                            className="text-red-600 hover:text-red-800 hover:bg-red-50"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  {editingId === setting.id ? (
-                    <Textarea
-                      value={editJsonInput}
-                      onChange={(e) => setEditJsonInput(e.target.value)}
-                      className="font-mono text-sm h-40 resize-none"
-                    />
-                  ) : (
-                    <pre className="bg-muted rounded-lg p-4 overflow-x-auto text-sm font-mono">
-                      {JSON.stringify(setting.data, null, 2)}
-                    </pre>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                  </CardHeader>
+                  <CardContent>
+                    {editingId === setting.id ? (
+                      <Textarea
+                        value={editJsonInput}
+                        onChange={(e) => setEditJsonInput(e.target.value)}
+                        className="font-mono text-sm h-40 resize-none"
+                      />
+                    ) : (
+                      <pre className="bg-muted rounded-lg p-4 overflow-x-auto text-sm font-mono">
+                        {JSON.stringify(setting.data, null, 2)}
+                      </pre>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="flex justify-center gap-2 mt-6">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                >
+                  <ChevronLeft className="h-4 w-4 mr-1" />
+                  Previous
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4 ml-1" />
+                </Button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
