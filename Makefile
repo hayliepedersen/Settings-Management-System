@@ -1,5 +1,6 @@
 .PHONY: help install up down restart logs logs-frontend logs-backend clean status
 .PHONY: dev-frontend dev-backend format format-check lint lint-fix type-check dev-db stop-db
+.PHONY: test test-backend test-frontend
 
 help:
 	@echo "Available commands:"
@@ -12,6 +13,10 @@ help:
 	@echo "  make dev-frontend    - Run frontend dev server"
 	@echo "  make dev-backend     - Run backend dev server"
 	@echo "  make dev-db          - Start postgres for local dev"
+	@echo ""
+	@echo "  make test            - Run all tests"
+	@echo "  make test-backend    - Run backend tests"
+	@echo "  make test-frontend   - Run frontend tests"
 	@echo ""
 	@echo "  make format          - Format all code"
 	@echo "  make lint            - Lint all code"
@@ -66,6 +71,16 @@ dev-db:
 
 stop-db:
 	docker stop settings-db && docker rm settings-db || true
+
+test: test-backend test-frontend
+
+test-backend:
+	@echo "Running backend tests..."
+	cd backend && ./venv/bin/pytest tests/ -v
+
+test-frontend:
+	@echo "Running frontend tests..."
+	cd frontend && npm test
 
 format:
 	@echo "Formatting frontend..."
