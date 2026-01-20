@@ -86,35 +86,6 @@ export default function SettingsManagement() {
   const settings = data?.items || []
   const totalPages = data ? Math.ceil(data.total / pageSize) : 0
 
-  const PaginationControls = () => (
-    <div className="flex items-center justify-between">
-      <p className="text-sm text-muted-foreground">
-        Showing {(page - 1) * pageSize + 1}-
-        {Math.min(page * pageSize, data?.total || 0)} of {data?.total} settings
-      </p>
-      <div className="flex gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setPage((p) => Math.max(1, p - 1))}
-          disabled={page === 1}
-        >
-          <ChevronLeft className="h-4 w-4" />
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-          disabled={page === totalPages}
-        >
-          Next
-          <ChevronRight className="h-4 w-4" />
-        </Button>
-      </div>
-    </div>
-  )
-
   return (
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-6xl mx-auto">

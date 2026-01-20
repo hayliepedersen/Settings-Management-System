@@ -72,6 +72,17 @@ dev-db:
 stop-db:
 	docker stop settings-db && docker rm settings-db || true
 
+setup-test-db:
+	@echo "Setting up test database..."
+	@if docker ps | grep -q settings-management-system-db-1; then \
+		docker exec settings-management-system-db-1 psql -U postgres -c "CREATE DATABASE settings_test_db;" 2>/dev/null || echo "Test DB already exists"; \
+	elif docker ps | grep -q settings-db; then \
+		docker exec settings-db psql -U postgres -c "CREATE DATABASE settings_test_db;" 2>/dev/null || echo "Test DB already exists"; \
+	else \
+		echo "No database container found. Run 'make up' or 'make dev-db' first."; \
+		exit 1; \
+	fi
+
 test: test-backend test-frontend
 
 test-backend:

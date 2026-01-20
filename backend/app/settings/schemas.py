@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Dict, Any, List
 
 
@@ -11,11 +11,10 @@ class SettingsUpdate(BaseModel):
 
 
 class SettingsResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
     id: str
     data: Dict[str, Any]
-
-    class Config:
-        from_attributes = True
 
 
 class SettingsList(BaseModel):
