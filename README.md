@@ -20,8 +20,14 @@ Hi! Welcome to my settings management system application :)
    - Frontend: http://localhost:3000
    - Backend API: http://localhost:8000
    - API Docs: http://localhost:8000/docs
+  
+4. **Run tests**
+```bash
+   make setup-test-db
+   make test
+```
 
-4. **Stop containers:**
+5. **Stop containers:**
 ```bash
    make down
 ```
